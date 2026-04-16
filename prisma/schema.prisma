@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id               String   @id @default(cuid())
+  repo             String
+  commitHash       String   @unique @map("commit_hash")
+  status           String   @default("pending") // "pending" | "generated" | "sent" | "edited" | "approved" | "posted" | "failed"
+
+  xDraft           String?  @map("x_draft")
+  linkedinDraft    String?  @map("linkedin_draft")
+
+  updatedXDraft    String?  @map("updated_x_draft")
+  updatedLinkedinDraft String? @map("updated_linkedin_draft")
+
+  promptVersion    String?  @map("prompt_version")
+
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("posts")
+}
